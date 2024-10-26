@@ -11,7 +11,8 @@ type CartAction =
   | { type: 'ADD_ITEM'; payload: Product }
   | { type: 'REMOVE_ITEM'; payload: string }
   | { type: 'UPDATE_ITEM'; payload: { id: string; quantity: number } }
-  | { type: 'CLEAR_CART' };
+  | { type: 'CLEAR_CART' }
+  | { type: 'SET_CART'; payload: CartState };
 
 const initialState: CartState = {
   items: [],
@@ -62,6 +63,8 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     }
     case 'CLEAR_CART':
       return initialState;
+    case 'SET_CART': // Nueva acción para establecer el carrito desde AsyncStorage
+      return { ...action.payload };
     default:
       return state;
   }
@@ -76,12 +79,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const jsonValue = await AsyncStorage.getItem('@cart');
         if (jsonValue) {
-          const cart = JSON.parse(jsonValue);
-          const total = calculateTotal(cart.items); // Calcula el total
-          dispatch({ type: 'CLEAR_CART' }); // Limpia el estado actual
-          cart.items.forEach((item: Product) => {
-            dispatch({ type: 'ADD_ITEM', payload: { ...item, quantity: item.quantity || 1 } });
-          });
+          const savedCart = JSON.parse(jsonValue);
+          const total = calculateTotal(savedCart.items);
+          dispatch({ type: 'SET_CART', payload: { ...savedCart, total } });
         }
       } catch (e) {
         console.error("Error al cargar el carrito: ", e);
@@ -103,7 +103,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     saveCart();
-  }, [state]);
+  }, [state.items]);
 
   return (
     <CartContext.Provider value={{ state, dispatch }}>
