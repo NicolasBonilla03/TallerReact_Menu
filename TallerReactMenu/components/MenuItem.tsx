@@ -16,7 +16,8 @@ const MenuItem: React.FC<MenuItemProps> = ({ product }) => {
 
   return (
     <View style={{ padding: 10, borderBottomWidth: 1, borderColor: '#ccc' }}>
-      <Image source={{ uri: 'https://via.placeholder.com/150' }} style={{ width: 150, height: 100 }} />
+      {/* Usa la URL específica del producto */}
+      <Image source={{ uri: product.image }} style={{ width: 150, height: 100 }} />
       <Text>{product.name}</Text>
       <Text>Precio: ${product.price}</Text>
       <Text>{product.description}</Text>
