@@ -12,7 +12,10 @@ const CartScreen = () => {
     <CartItem item={item} />
   );
   
-  
+  const confirmOrder = () => {
+    dispatch({ type: 'CONFIRM_ORDER' });
+    // Aquí puedes redirigir al usuario a una pantalla de resumen o confirmación
+  };
 
   return (
     <View>
@@ -21,7 +24,7 @@ const CartScreen = () => {
       <Text>Total: ${state.total}</Text>
       <Text>Costo de domicilio: ${deliveryFee}</Text>
       <Text>Total a pagar: ${state.total + deliveryFee}</Text>
-      <Button title="Confirmar Pedido" onPress={() => dispatch({ type: 'CLEAR_CART' })} />
+      <Button title="Confirmar Pedido" onPress={confirmOrder} />
     </View>
   );
 };

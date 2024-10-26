@@ -5,6 +5,7 @@ import { Product } from '../types';
 interface CartState {
   items: Product[];
   total: number;
+  orders: Array<{ id: number; items: Product[]; total: number }>; // Historial de pedidos
 }
 
 type CartAction =
@@ -12,11 +13,13 @@ type CartAction =
   | { type: 'REMOVE_ITEM'; payload: string }
   | { type: 'UPDATE_ITEM'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' }
-  | { type: 'SET_CART'; payload: CartState };
+  | { type: 'SET_CART'; payload: CartState }
+  | { type: 'CONFIRM_ORDER' };
 
 const initialState: CartState = {
   items: [],
   total: 0,
+  orders: [], // Inicializar el historial de pedidos vacío
 };
 
 const CartContext = createContext<{
@@ -62,9 +65,22 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       return { ...state, items: updatedItems, total: calculateTotal(updatedItems) };
     }
     case 'CLEAR_CART':
-      return initialState;
-    case 'SET_CART': // Nueva acción para establecer el carrito desde AsyncStorage
+      return { ...state, items: [], total: 0 }; // Limpia solo el carrito, no el historial
+    case 'SET_CART':
       return { ...action.payload };
+    case 'CONFIRM_ORDER': {
+      const newOrder = {
+        id: Date.now(), // ID único para cada pedido
+        items: state.items,
+        total: state.total,
+      };
+      const updatedOrders = [...state.orders, newOrder];
+
+      // Guarda el historial de pedidos en AsyncStorage
+      AsyncStorage.setItem('@orders', JSON.stringify(updatedOrders));
+
+      return { ...state, orders: updatedOrders, items: [], total: 0 };
+    }
     default:
       return state;
   }
@@ -73,18 +89,22 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
-  // Cargar el carrito desde AsyncStorage al iniciar la aplicación
+  // Cargar el carrito y el historial de pedidos desde AsyncStorage al iniciar la aplicación
   useEffect(() => {
     const loadCart = async () => {
       try {
-        const jsonValue = await AsyncStorage.getItem('@cart');
-        if (jsonValue) {
-          const savedCart = JSON.parse(jsonValue);
-          const total = calculateTotal(savedCart.items);
-          dispatch({ type: 'SET_CART', payload: { ...savedCart, total } });
-        }
+        const cartJson = await AsyncStorage.getItem('@cart');
+        const ordersJson = await AsyncStorage.getItem('@orders');
+
+        const cart = cartJson ? JSON.parse(cartJson) : initialState;
+        const orders = ordersJson ? JSON.parse(ordersJson) : [];
+
+        dispatch({
+          type: 'SET_CART',
+          payload: { ...cart, orders, total: calculateTotal(cart.items) },
+        });
       } catch (e) {
-        console.error("Error al cargar el carrito: ", e);
+        console.error('Error al cargar el carrito o historial de pedidos: ', e);
       }
     };
 
