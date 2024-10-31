@@ -1,7 +1,7 @@
-// MenuScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import MenuItem from '../components/MenuItem';
+import FilterMenu from '../components/FilterMenu';
 import { products } from '../components/products';
 
 const MenuScreen = () => {
@@ -16,17 +16,8 @@ const MenuScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Menú</Text>
 
-      {/* Botones para seleccionar la categoría */}
-      <View style={styles.categoryButtons}>
-        <Button title="Todos" onPress={() => setSelectedCategory('Todos')} />
-        <Button title="Bebidas frías" onPress={() => setSelectedCategory('Bebidas frías')} />
-        <Button title="Sopas calientes" onPress={() => setSelectedCategory('Sopas calientes')} />
-        <Button title="Platos del día" onPress={() => setSelectedCategory('Platos del día')} />
-        <Button title="Platos a la carta" onPress={() => setSelectedCategory('Platos a la carta')} />
-        <Button title="Menú infantil" onPress={() => setSelectedCategory('Menú infantil')} />
-      </View>
-
-      {/* Lista de productos */}
+      <FilterMenu selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
+      
       <FlatList
         data={filteredProducts}
         renderItem={({ item }) => <MenuItem product={item} />}
@@ -47,11 +38,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10,
-  },
-  categoryButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
     marginBottom: 10,
   },
   productList: {

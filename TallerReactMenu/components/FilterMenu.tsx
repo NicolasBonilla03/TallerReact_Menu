@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button } from 'react-native';
+import { View, Button, StyleSheet } from 'react-native';
 
 interface FilterMenuProps {
   selectedCategory: string;
@@ -17,7 +17,7 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ selectedCategory, onSelectCateg
   ];
 
   return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+    <View style={styles.categoryButtons}>
       {categories.map((category) => (
         <Button
           key={category}
@@ -29,5 +29,12 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ selectedCategory, onSelectCateg
     </View>
   );
 };
+const styles = StyleSheet.create({
+  categoryButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 10,
+  }
+});
 
 export default FilterMenu;
