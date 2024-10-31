@@ -1,3 +1,4 @@
+// CartScreen.tsx
 import React from 'react';
 import { View, Text, Button, FlatList } from 'react-native';
 import { useCart } from '../contexts/CartContext';
@@ -11,10 +12,15 @@ const CartScreen = () => {
   const renderCartItem = ({ item }) => (
     <CartItem item={item} />
   );
-  
+
   const confirmOrder = () => {
     dispatch({ type: 'CONFIRM_ORDER' });
-    // Aquí puedes redirigir al usuario a una pantalla de resumen o confirmación
+    dispatch({ type: 'CLEAR_CART' });
+  };
+
+  // Nueva función para eliminar todos los artículos del carrito
+  const clearCart = () => {
+    dispatch({ type: 'CLEAR_CART' });
   };
 
   return (
@@ -25,6 +31,7 @@ const CartScreen = () => {
       <Text>Costo de domicilio: ${deliveryFee}</Text>
       <Text>Total a pagar: ${state.total + deliveryFee}</Text>
       <Button title="Confirmar Pedido" onPress={confirmOrder} />
+      <Button title="Eliminar Pedido" onPress={clearCart} color="red" />
     </View>
   );
 };
