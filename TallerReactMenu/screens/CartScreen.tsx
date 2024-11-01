@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
+import { View, Text, Button, FlatList, StyleSheet, Image } from 'react-native';
 import { useCart } from '../contexts/CartContext';
 import CartItem from '../components/CartItem';
 import { calculateDeliveryFee } from '../utils/calculateDeliveryFee';
+import Animated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 
 const CartScreen = () => {
   const { state, dispatch } = useCart();
@@ -16,8 +17,15 @@ const CartScreen = () => {
   };
 
   return (
+    <Animated.View 
+      entering={SlideInRight} 
+      exiting={SlideOutLeft} 
+      style={styles.container}
+    >
+    
     <View style={styles.screen}>
-      <Text style={styles.title}>Carrito de Compras</Text>
+      <Image source={require('../assets/logo.png')} style={styles.logo} />
+      <Text style={styles.title}>Tu Pedido</Text>
       <FlatList
         data={state.items}
         renderItem={renderCartItem}
@@ -25,47 +33,68 @@ const CartScreen = () => {
         contentContainerStyle={styles.listContent}
       />
       <View style={styles.summaryContainer}>
-        <Text style={styles.summaryText}>Total: ${state.total}</Text>
+        <Text style={styles.summaryText}>Subtotal: ${state.total}</Text>
         <Text style={styles.summaryText}>Costo de Domicilio: ${deliveryFee}</Text>
-        <Text style={styles.total}>Total a Pagar: ${state.total + deliveryFee}</Text>
-        <Button title="Confirmar Pedido" onPress={confirmOrder} />
+        <Text style={styles.total}>Total: ${state.total + deliveryFee}</Text>
+        <Button title="Confirmar Pedido" color="#d9534f" onPress={confirmOrder} />
       </View>
     </View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
+  container: {
     flex: 1,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: '#f8f8f8',
     padding: 10,
   },
+  screen: {
+    flex: 1,
+    backgroundColor: '#f8f5f2', // Fondo beige claro
+    padding: 25,
+  },
+  logo: {
+    bottom: 10,
+    width: 60,
+    height: 60,
+    resizeMode: 'contain',
+    alignSelf: 'auto',
+  },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 10,
+    color: '#8B4513', // Color marrón
+    marginTop:-55,
+    marginBottom: 10,
   },
   listContent: {
     paddingBottom: 20,
   },
   summaryContainer: {
-    padding: 15,
+    padding: 20,
     borderTopWidth: 1,
     borderColor: '#ddd',
     backgroundColor: '#fff',
     borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    elevation: 5,
     marginVertical: 15,
   },
   summaryText: {
     fontSize: 16,
     marginBottom: 5,
+    color: '#555',
   },
   total: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
+    color: '#8B0000', // Color rojo profundo
+    marginBottom: 15,
   },
 });
 

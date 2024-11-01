@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
 interface FilterMenuProps {
   selectedCategory: string;
@@ -17,24 +17,42 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ selectedCategory, onSelectCateg
   ];
 
   return (
-    <View style={styles.categoryButtons}>
-      {categories.map((category) => (
-        <Button
+    <View style={styles.container}>
+      {categories.map(category => (
+        <TouchableOpacity
           key={category}
-          title={category}
+          style={[styles.categoryButton, selectedCategory === category && styles.selectedButton]}
           onPress={() => onSelectCategory(category)}
-          color={selectedCategory === category ? 'blue' : 'gray'}
-        />
+        >
+          <Text style={[styles.categoryText, selectedCategory === category && styles.selectedText]}>{category}</Text>
+        </TouchableOpacity>
       ))}
     </View>
-  );
+  );  
 };
 const styles = StyleSheet.create({
-  categoryButtons: {
+  container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 10,
-  }
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  categoryButton: {
+    padding: 8,
+    backgroundColor: '#eee',
+    borderRadius: 20,
+    margin: 5,
+  },
+  selectedButton: {
+    backgroundColor: '#8B0000',
+  },
+  categoryText: {
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  selectedText: {
+    color: '#fff',
+  },
 });
 
 export default FilterMenu;

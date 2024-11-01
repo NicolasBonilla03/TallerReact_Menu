@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { Product } from '../types';
 import { useCart } from '../contexts/CartContext';
+import QuantityButton from './QuantityButton';
 
 interface CartItemProps {
   item: Product;
@@ -22,53 +23,45 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.price}>Precio: ${item.price}</Text>
-        <Text style={styles.quantity}>Cantidad: {item.quantity}</Text>
-      </View>
-      <View style={styles.actionsContainer}>
-        <Button title="+" onPress={() => updateQuantity((item.quantity || 0) + 1)} />
-        <Button title="-" onPress={() => updateQuantity((item.quantity || 0) - 1)} disabled={item.quantity === 1} />
-        <Button title="Eliminar" onPress={removeItem} color="red" />
-      </View>
+ return (
+    <View style={styles.itemContainer}>
+      <Text style={styles.name}>{item.name}</Text>
+      <Text style={styles.price}>Precio: ${item.price}</Text>
+      <QuantityButton 
+        quantity={item.quantity || 1}
+        onIncrease={() => updateQuantity((item.quantity || 0) + 1)}
+        onDecrease={() => updateQuantity((item.quantity || 0) - 1)}
+      />
+      <Button title="Eliminar" color="#d9534f" onPress={removeItem} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  itemContainer: {
     padding: 15,
-    marginVertical: 8,
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 10,
+    marginVertical: 5,
     shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 3,
-    elevation: 2,
+    shadowRadius: 5,
+    elevation: 5,
   },
-  itemDetails: {
-    marginBottom: 10,
-  },
-  itemName: {
-    fontSize: 16,
+  name: {
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#333',
   },
   price: {
-    fontSize: 14,
-    color: '#333',
-  },
-  quantity: {
-    fontSize: 14,
-    color: '#333',
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    fontSize: 16,
+    color: '#888',
+    marginBottom: 10,
   },
 });
+
 
 export default CartItem;

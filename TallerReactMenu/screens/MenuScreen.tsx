@@ -1,50 +1,66 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
 import MenuItem from '../components/MenuItem';
 import FilterMenu from '../components/FilterMenu';
 import { products } from '../components/products';
+import Animated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 
 const MenuScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
 
-  // Filtrar productos basados en la categoría seleccionada
   const filteredProducts = selectedCategory === 'Todos'
     ? products
     : products.filter(product => product.category === selectedCategory);
 
   return (
-    <View style={styles.container}>
+    <Animated.View 
+      entering={SlideInRight} 
+      exiting={SlideOutLeft} 
+      style={styles.container}
+    >
+      <View style={{padding: 25}}>
+      <Image source={require('../assets/logo.png')} style={styles.logo} />
       <Text style={styles.title}>Menú</Text>
-
       <FilterMenu selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
-      
       <FlatList
         data={filteredProducts}
         renderItem={({ item }) => <MenuItem product={item} />}
         keyExtractor={(item) => item.id}
-        style={styles.productList}
+        numColumns={2}  
+        columnWrapperStyle={styles.row}
         contentContainerStyle={styles.productListContainer}
       />
-    </View>
+      </View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
-    padding: 10,
+    backgroundColor: '#f8f8f8',
+    paddingHorizontal: 10,
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    resizeMode: 'contain',
+    alignSelf: 'auto',
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
+    color: '#8B0000',
     textAlign: 'center',
-    marginBottom: 10,
+    marginTop: -55,
+    marginBottom: 30
   },
-  productList: {
-    flex: 1,
+  row: {
+    justifyContent: 'space-between',
   },
   productListContainer: {
-    paddingBottom: 20,  // Espacio adicional al final de la lista para ver el último elemento
+    padding: 10,
   },
 });
 
