@@ -47,12 +47,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f8f8',
-    padding: 10,
+    padding: 25,
   },
   screen: {
     flex: 1,
     backgroundColor: '#f8f5f2', // Fondo beige claro
-    padding: 25,
   },
   logo: {
     bottom: 10,

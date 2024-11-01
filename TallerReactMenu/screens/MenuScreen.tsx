@@ -18,7 +18,6 @@ const MenuScreen = () => {
       exiting={SlideOutLeft} 
       style={styles.container}
     >
-      <View style={{padding: 25}}>
       <Image source={require('../assets/logo.png')} style={styles.logo} />
       <Text style={styles.title}>Menú</Text>
       <FilterMenu selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
@@ -30,7 +29,6 @@ const MenuScreen = () => {
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.productListContainer}
       />
-      </View>
     </Animated.View>
   );
 };
@@ -40,7 +38,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f8f8',
-    paddingHorizontal: 10,
+    padding:25
   },
   logo: {
     width: 60,

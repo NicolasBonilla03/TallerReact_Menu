@@ -30,7 +30,6 @@ const OrderHistoryScreen = () => {
       exiting={SlideOutLeft} 
       style={styles.container}
     >
-      <View style= {{padding:25}}>
       <View style={styles.headerContainer}>
         <Image source={require('../assets/logo.png')} style={styles.logo} />
         <Text style={styles.title}>Historial de Pedidos</Text>
@@ -41,7 +40,6 @@ const OrderHistoryScreen = () => {
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.ordersList}
       />
-      </View>
     </Animated.View>
   );
 };
@@ -50,6 +48,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f8f8',
+    padding: 25,
   },
   headerContainer: {
     alignItems: 'center',
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   orderItemsList: {
-    marginTop: 10,
+    marginTop: 10, // Añadir margen superior para la separación de la lista de items
   },
 });
 
